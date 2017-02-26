@@ -9,7 +9,7 @@ CWE&trade; to capture weaknesses and generate requirements.
 ## More Info
 
 More information about the project's research is available at
-[CERT website](http://www.cert.org/cybersecurity-engineering/research/security-requirements-elicitation.cfm) 
+[CERT website](http://www.cert.org/cybersecurity-engineering/research/security-requirements-elicitation.cfm)
 
 The Report Writer and SERF User Guides and Admin Guides are also
 available at the [SEI website](http://resources.sei.cmu.edu/library/asset-view.cfm?assetid=463913)
@@ -19,5 +19,7 @@ available at the [SEI website](http://resources.sei.cmu.edu/library/asset-view.c
 
 ---
 
-Common Weakness Enumeration (CWE) is a trademark of the MITRE Corporation. 
+Common Weakness Enumeration (CWE) is a trademark of the MITRE Corporation.
 [MITRE CWE](http://cwe.mitre.org)
+
+## Connect JIRA with Bitbucket TEST
