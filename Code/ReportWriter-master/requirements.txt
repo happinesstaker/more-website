@@ -1,7 +1,6 @@
 Django==1.8.2
 django-admin-bootstrapped==2.5.0
 django-autocomplete-light==2.2.0rc4
-psycopg2==2.6
 pytz==2015.4
 django-widget-tweaks==1.3
 django-recaptcha==1.0.4

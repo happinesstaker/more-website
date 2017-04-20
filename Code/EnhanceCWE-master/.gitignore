@@ -1,4 +1,5 @@
 EnhancedCWE/local_settings.py
+scripts/CWE-list.xml
 *.sqlite3
 venv
 staticfiles

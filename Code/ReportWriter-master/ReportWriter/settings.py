@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -34,7 +34,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '3z8b9g&(36(t@h5n4qge6un)@li)8w!8(k8vf9kq74k+r)+75u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -79,9 +79,9 @@ INSTALLED_APPS = (
 # Email settings
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'reportwritingapplication'
+EMAIL_HOST_USER = '18732.test.websec'
 EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD = 'reportwriting_masre'
+EMAIL_HOST_PASSWORD = '4)-!n;8ciD:Y9>'
 
 
 # START: allauth settings
@@ -101,9 +101,9 @@ ACCOUNT_EXTRA_PRE_LOGIN_STEPS = ['invitation.utils.verify_email_if_invited',
 # END
 
 # START: Capcha settings
-RECAPTCHA_PUBLIC_KEY = '6LeuwggTAAAAAGXDRJ0uFgVGPJZLhZdBRdUK1O87'
-RECAPTCHA_PRIVATE_KEY = '6LeuwggTAAAAAFssdSpwuDFw-V3-W64Pn9OM-mXs'
-NOCAPTCHA=False
+RECAPTCHA_PUBLIC_KEY = '6LcQ5RsUAAAAADt3lPJThyLWPK1hd6ja9kiDVFfb'
+RECAPTCHA_PRIVATE_KEY = '6LcQ5RsUAAAAACfW2F1qpmrYm_4mrIB1d37gtY_p'
+NOCAPTCHA = True
 RECAPTCHA_USE_SSL = True
 # END
 
@@ -158,10 +158,17 @@ WSGI_APPLICATION = 'ReportWriter.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
-    'default': dj_database_url.config(),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'reportwriter',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 # Enable Connection Pooling
-DATABASES['default']['ENGINE'] = 'django_postgrespool'
+# DATABASES['default']['ENGINE'] = 'django_postgrespool'
 
 
 # Internationalization
