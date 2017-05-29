@@ -161,10 +161,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'reportwriter',
-        'USER': 'jiajiey',
+        'USER': 'maggie',
         'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 # Enable Connection Pooling

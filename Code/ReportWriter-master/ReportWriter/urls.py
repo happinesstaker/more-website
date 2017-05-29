@@ -44,4 +44,6 @@ urlpatterns = [
     url(r'^app/password_change/', 'register.views.password_change'),
     url(r'^app/', include(admin.site.urls)),
     url(r'^autocomplete/', include('autocomplete_light.urls')),
+    rl(r'api/v2/', include('rest_api.urls')),   # Add "v2" to indicate the version.
+
 ]

@@ -16,6 +16,9 @@
 from django.db import models
 from django.core.validators import URLValidator
 from solo.models import SingletonModel
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+from register_approval.signals import register_approved, register_rejected
 
 class RESTConfiguration(SingletonModel):
     url = models.CharField(validators=[URLValidator()], max_length=255)
@@ -26,4 +29,23 @@ class RESTConfiguration(SingletonModel):
 
     class Meta:
         verbose_name = "REST Configuration"
+
+@receiver(register_approved)
+def create_auth_token(sender, instance, **kwargs):
+    """
+    Create the token once the user is approved.
+    """
+    if getattr(instance, 'requested_role', None) == 'client':
+        Token.objects.create(user=instance.user)
+
+
+@receiver(register_rejected)
+def delete_auth_token(sender, instance, **kwargs):
+    """
+    delete the token once the user is rejected.
+    """
+    Token.objects.filter(user=instance.user).delete()
+
+
+
 
