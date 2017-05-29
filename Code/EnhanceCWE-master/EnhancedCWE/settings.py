@@ -169,11 +169,11 @@ WSGI_APPLICATION = 'EnhancedCWE.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'serf',
-        'USER': 'admin',
-        'PASSWORD': 'admin',
+        'NAME': 'jiajiey',
+        'USER': 'jiajiey',
+        'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '',
     }
 }
 # Enable Connection Pooling
