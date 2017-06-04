@@ -47,7 +47,11 @@
 {% block content %}
 <div class="row">
     <div id="content-main" class="col-sm-12">
-
+        <div name = "test-rest-api">
+            <form action="{% url 'restapi_Test' %}" method="get" id = "test_rest_api_form">
+                <button id = "test-rest-api-button" type="submit">Test Rest API</button>
+            </form>
+        </div>
         <div class="tabbable">
             {% for app in app_list %}
                 {% include "admin/bootstrapped_extra/app_name.html" %}

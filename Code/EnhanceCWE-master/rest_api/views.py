@@ -28,12 +28,17 @@ from rest_api.serializers import CWESerializer
 from rest_api.serializers import MisuseCaseSerializer
 from rest_api.serializers import UseCaseSerializer
 from .settings import SUGGESTED_CWE_MAX_RETURN
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 # Constants
 FIELD_LENGTH_CWE_NAME = 128
 DJANGO_DB_INTEGER_FIELD_SAFE_UPPER_LIMIT = 2147483647
 
+def test_rest_api(request):
+    print request
+
+    return redirect('/') 
 
 class CWEAllList(APIView):
     """
