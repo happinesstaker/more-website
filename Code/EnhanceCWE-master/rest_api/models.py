@@ -16,6 +16,9 @@
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from register_approval.signals import register_approved, register_rejected
+from django.db import models
+from django.core.validators import URLValidator
+from solo.models import SingletonModel
 
 
 @receiver(register_approved)
@@ -33,3 +36,14 @@ def delete_auth_token(sender, instance, **kwargs):
     delete the token once the user is rejected.
     """
     Token.objects.filter(user=instance.user).delete()
+
+
+class RESTConfiguration(SingletonModel):
+    url = models.CharField(validators=[URLValidator()], max_length=255)
+    token = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return u"REST Configuration"
+
+    class Meta:
+        verbose_name = "REST Configuration"

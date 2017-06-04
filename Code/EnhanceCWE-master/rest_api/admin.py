@@ -13,6 +13,10 @@
 # Released under a modified BSD license, please see license.txt for full
 # terms. DM-0003473
 # @OPENSOURCE_HEADER_END@
-from django.contrib import admin
 
-# Register your models here.
+from django.contrib import admin
+from solo.admin import SingletonModelAdmin
+from models import RESTConfiguration
+
+admin.site.register(RESTConfiguration, SingletonModelAdmin)
+

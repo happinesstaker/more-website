@@ -75,9 +75,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_api',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_api',
     'cwe',
     'user_profile',
     'muo_mailer',
@@ -169,11 +169,12 @@ WSGI_APPLICATION = 'EnhancedCWE.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'jiajiey',
-        'USER': 'jiajiey',
+        'NAME': 'serf',
+        'USER': 'maggie',
         'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5433',
+
     }
 }
 # Enable Connection Pooling
