@@ -41,7 +41,7 @@ def delete_auth_token(sender, instance, **kwargs):
 
 
 class RESTConfiguration(BaseModel):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, unique=True)
     url = models.CharField(validators=[URLValidator()], max_length=255)
     token = models.CharField(max_length=255)
 
