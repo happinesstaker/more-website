@@ -27,8 +27,8 @@ class rest_api:
         Returns the URL of REST API server
         :return: A string containing the URL
         '''
-        if RESTConfiguration.objects.all().filter(name = name)
-            config = RESTConfiguration.objects.all().filter[0]
+        if RESTConfiguration.objects.all().filter(name = name):
+            config = RESTConfiguration.objects.all().filter(name = name)[0]
             return config.url
         else:
             return None
@@ -39,8 +39,8 @@ class rest_api:
         Creates a dictionary of the things to be passed in the REST requests header
         :return: A dictionary containing the API key
         '''
-        if RESTConfiguration.objects.all().filter(name = name)
-            config = RESTConfiguration.objects.all().filter[0]
+        if RESTConfiguration.objects.all().filter(name = name):
+            config = RESTConfiguration.objects.all().filter(name = name)[0]
             return {'Authorization': 'Token %s' % config.token}
         else:
             return {}

@@ -30,6 +30,7 @@ from rest_api.serializers import UseCaseSerializer
 from .settings import SUGGESTED_CWE_MAX_RETURN
 from django.shortcuts import render, redirect, get_object_or_404
 import requests
+from rest_api.utils import rest_api
 
 # Constants
 FIELD_LENGTH_CWE_NAME = 128
@@ -37,12 +38,10 @@ DJANGO_DB_INTEGER_FIELD_SAFE_UPPER_LIMIT = 2147483647
 
 def test_rest_api(request):
     print request
-    url_string = "http://localhost:7000/api/v1/report_feedback/test"
-    token = "0940d00be7936038ecda59c8816b1605a1c51bfe"
-    auth = {'Authorization': 'Token %s' % token}
+    url_string = rest_api.get_url("localhost")
+    auth = rest_api.get_header("localhost")
     post_data = {'data': 'Hi from SERF'}
 
-    
     print "try"
     response = requests.post(url_string, headers=auth,data=post_data)
     print "response of SERF", response
