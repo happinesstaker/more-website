@@ -17,6 +17,12 @@
 from django.contrib import admin
 from solo.admin import SingletonModelAdmin
 from models import RESTConfiguration
+from base.admin import BaseAdmin
 
-admin.site.register(RESTConfiguration, SingletonModelAdmin)
+# admin.site.register(RESTConfiguration, SingletonModelAdmin)
 
+@admin.register(RESTConfiguration)
+class RESTConfigurationAdmin(BaseAdmin):
+    fields = ['name','url', 'token']
+
+# admin.site.register(RESTConfiguration, RESTConfigurationAdmin)

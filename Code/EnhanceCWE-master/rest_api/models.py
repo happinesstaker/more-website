@@ -19,6 +19,8 @@ from register_approval.signals import register_approved, register_rejected
 from django.db import models
 from django.core.validators import URLValidator
 from solo.models import SingletonModel
+from django.contrib import admin
+from base.models import BaseModel
 
 
 @receiver(register_approved)
@@ -38,12 +40,13 @@ def delete_auth_token(sender, instance, **kwargs):
     Token.objects.filter(user=instance.user).delete()
 
 
-class RESTConfiguration(SingletonModel):
+class RESTConfiguration(BaseModel):
+    name = models.CharField(max_length=32)
     url = models.CharField(validators=[URLValidator()], max_length=255)
     token = models.CharField(max_length=255)
 
     def __unicode__(self):
-        return u"REST Configuration"
+        return self.name
 
     class Meta:
         verbose_name = "REST Configuration"
