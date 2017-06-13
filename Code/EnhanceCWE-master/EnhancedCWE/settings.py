@@ -172,12 +172,12 @@ WSGI_APPLICATION = 'EnhancedCWE.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': config.get('RW database', 'ENGINE'),
-        'NAME': config.get('RW database', 'NAME'),
-        'USER': config.get('RW database', 'USER'),
-        'PASSWORD': config.get('RW database', 'PASSWORD'),
-        'HOST': config.get('RW database', 'HOST'),
-        'PORT': config.get('RW database', 'PORT'),
+        'ENGINE': config.get('SERF database', 'ENGINE'),
+        'NAME': config.get('SERF database', 'NAME'),
+        'USER': config.get('SERF database', 'USER'),
+        'PASSWORD': config.get('SERF database', 'PASSWORD'),
+        'HOST': config.get('SERF database', 'HOST'),
+        'PORT': config.get('SERF database', 'PORT'),
 
     }
 }
