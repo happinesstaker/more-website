@@ -17,7 +17,10 @@ import requests
 from requests.exceptions import ConnectionError
 from .models import *
 import json
+from ConfigParser import RawConfigParser
 
+config = RawConfigParser()
+config.read(BASE_DIR + '/../../Deploy/config.ini')
 
 class rest_api:
 
@@ -195,9 +198,13 @@ class rest_api:
         :return: Returns a dictionary containing whether the request was successful or not. If the request was not
                  successful, the dictionary also contains the descriptive error message.
         '''
+
         payload = {'cwes': json.dumps(cwe_codes),
                    'muc': json.dumps(misuse_case),
-                   'uc': json.dumps(use_case)}
+                   'uc': json.dumps(use_case),
+                   'rw_identifier': config.get('RW identifier','IDENTIFIER')
+
+                   }
         url_string = '%s/custom_muo/save' % rest_api.get_url()
         try:
             response = requests.post(url_string, data=payload, headers=rest_api.get_header())
