@@ -1,3 +1,12 @@
+'''This module could import NVD CWE list into out database
+
+Original XML file comes from NVD (https://nvd.nist.gov/) CWE List
+Import Destination: SERF CWE search base
+
+Usage: put this file and CWE source file () under EnhancedCWE-master/scripts/ and use django-extensions to call this module and import
+
+'''
+
 from cwe.models import Category
 from cwe.models import Keyword
 from cwe.models import CWE
@@ -17,7 +26,7 @@ def getNsTagged(tag):
 
 def readXML():
     parser = etree.XMLParser(remove_blank_text=True)
-    tree = etree.parse('scripts/CWE-list.xml', parser=parser)
+    tree = etree.parse('scripts/CWE-summary-list.xml', parser=parser)
     root = tree.getroot()
     weakness_list = root.find('Weaknesses').findall('Weakness')
     cwe_search = CWESearchLocator.get_instance()
@@ -60,8 +69,6 @@ def readXML():
                 curCWE.save()
     except Exception as e:
         traceback.print_exc()
-
-
 
 def run():
     print "Start Analyzing XML..."
