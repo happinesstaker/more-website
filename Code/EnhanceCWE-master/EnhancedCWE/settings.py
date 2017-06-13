@@ -28,7 +28,11 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import dj_database_url
+from ConfigParser import RawConfigParser
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+config = RawConfigParser()
+config.read(BASE_DIR + '/../../Deploy/config.ini')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -88,10 +92,10 @@ INSTALLED_APPS = (
 
 # Email settings
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = '18732.test.websec'
-EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD = '4)-!n;8ciD:Y9>'
+EMAIL_HOST = config.get('email','EMAIL_HOST')
+EMAIL_HOST_USER = config.get('email', 'EMAIL_HOST_USER')
+EMAIL_PORT = config.get('email', 'EMAIL_PORT')
+EMAIL_HOST_PASSWORD = config.get('email', 'EMAIL_PASSWORD')
 
 
 # START: allauth settings
@@ -168,12 +172,12 @@ WSGI_APPLICATION = 'EnhancedCWE.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'serf',
-        'USER': 'maggie',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '5433',
+        'ENGINE': config.get('RW database', 'ENGINE'),
+        'NAME': config.get('RW database', 'NAME'),
+        'USER': config.get('RW database', 'USER'),
+        'PASSWORD': config.get('RW database', 'PASSWORD'),
+        'HOST': config.get('RW database', 'HOST'),
+        'PORT': config.get('RW database', 'PORT'),
 
     }
 }
