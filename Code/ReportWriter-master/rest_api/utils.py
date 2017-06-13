@@ -18,7 +18,9 @@ from requests.exceptions import ConnectionError
 from .models import *
 import json
 from ConfigParser import RawConfigParser
+import os
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 config = RawConfigParser()
 config.read(BASE_DIR + '/../../Deploy/config.ini')
 
