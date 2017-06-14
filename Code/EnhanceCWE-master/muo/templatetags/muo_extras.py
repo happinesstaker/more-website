@@ -38,6 +38,7 @@ def muo_submit_row(context):
     show_save_as_new = ctx.get('show_save_as_new')
     show_save = ctx.get('show_save')
     show_delete_link = ctx.get('show_delete_link')
+    show_advice = ctx.get('show_advice')
 
     ctx.update({
         # Do not show save and add another button
@@ -105,6 +106,11 @@ def muo_submit_row(context):
                             model_object.is_published == True and
                             model_object.status in ('approved',) and
                             (user_object.has_perm('muo.can_edit_all') or user_object.has_perm('muo.can_approve') or user_object.has_perm('muo.can_reject')),
+
+        'show_advice':  model_object and
+                        model_object.is_published == True and
+                        model_object.status in ('approved',) and
+                        (user_object.has_perm('muo.can_edit_all') or user_object.has_perm('muo.can_approve') or user_object.has_perm('muo.can_reject')),
     })
 
     return ctx

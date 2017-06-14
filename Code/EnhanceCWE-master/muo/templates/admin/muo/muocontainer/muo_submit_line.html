@@ -4,6 +4,7 @@
         {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
         <a class="btn btn-danger deletelink" href="{% add_preserved_filters delete_url %}">{% trans "Delete" %}</a>
     {% endif %}
+    {% if show_advice %}<input type="submit" value="{% trans 'Advice' %}" class="btn btn-default" name="_advice" />{% endif %}
 </div>
 <div class="pull-right">
 {% if show_approve %}<input type="submit" value="{% trans 'Approve' %}" class="btn btn-default" name="_approve" />{% endif %}
@@ -18,7 +19,6 @@
 {% if show_save %}<input type="submit" value="{% trans 'Save' %}" class="btn btn-primary default" name="_save" {{ onclick_attrib }}/>{% endif %}
 {% if show_publish %}<input type="submit" value="{% trans 'Publish' %}" class="btn btn-default" name="_publish" />{% endif %}
 {% if show_unpublish %}<input type="submit" value="{% trans 'Unpublish' %}" class="btn btn-default" name="_unpublish" />{% endif %}
-
 </div>
 <div class="spacer"></div>
 
