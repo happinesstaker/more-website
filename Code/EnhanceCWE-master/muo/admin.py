@@ -258,6 +258,10 @@ class MUOContainerAdmin(BaseAdmin):
                 obj.action_set_publish(PublishUnpublishValues.PUBLISH)
                 msg = "This MUO has been published."
 
+            elif "_advice" in request.POST:
+                advice= request.POST.get('advice_text', '')
+                obj.action_add_advice(advice)
+                msg = "Add advice to this MUO."
             else:
                 # Let super class 'ModelAdmin' handle rest of the button clicks i.e. 'save' 'save and continue' etc.
                 return super(MUOContainerAdmin, self).response_change(request, obj, *args, **kwargs)

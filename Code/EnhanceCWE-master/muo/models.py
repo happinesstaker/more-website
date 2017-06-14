@@ -61,7 +61,6 @@ class Tag(BaseModel):
     def __unicode__(self):
         return self.name
 
-
 class MUOQuerySet(models.QuerySet):
     """
     Define custom methods for the MUO QuerySet
@@ -461,7 +460,11 @@ class MUOContainer(BaseModel):
                 self.save()
         else:
             raise ValueError("MUO can only be published/unpublished if it is in approved state.")
-
+    
+    #to_do, write like action_reject
+    def action_add_advice(self, advice):
+        new_advice = Advice(muo=self,advice=advice)
+        new_advice.save()
 
 
 @receiver(pre_save, sender=MUOContainer, dispatch_uid='muo_container_pre_save_signal')
@@ -552,6 +555,17 @@ class UseCase(BaseModel):
     def get_absolute_url(self, language=None):
         pass
 
+class Advice(BaseModel):
+    muo = models.ForeignKey(MUOContainer,related_name = "muocontainer_id")
+    advice = models.CharField(max_length=1000)
+
+    class Meta:
+        verbose_name = "Advice"
+        verbose_name_plural = "Advice"
+        default_permissions = ('view')
+
+    def __unicode__(self):
+        return self.advice
 
 @receiver(post_save, sender=UseCase, dispatch_uid='usecase_post_save_signal')
 def post_save_usecase(sender, instance, created, using, **kwargs):
