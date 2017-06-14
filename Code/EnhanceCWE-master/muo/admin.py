@@ -37,6 +37,59 @@ from base.admin import BaseAdmin
 #     search_fields = ['name']
 
 
+class AdviceAdminInLine(admin.StackedInline):
+    model = Advice
+    extra = 0
+    fields = ['advice_title','advice_text']
+    readonly_fields = ['advice_title','advice_text']
+
+
+    def has_delete_permission(self, request, obj=None):
+        """
+        Overriding the method such that the delete option on the AdviceAdminInline form on change form
+        is not available for the users except the original author or users with 'can_edit_all' permission.
+        The delete option is only available to the original author or users with 'can_edit_all' permission
+        if the related MUOContainer is in draft or rejected state
+        """
+
+        if obj is None:
+            # This is add form, let super handle this
+            return super(AdiceAdminInLine, self).has_delete_permission(request, obj=None)
+        else:
+            # This is change form. Only original author or users with 'can_edit_all' permission are allowed
+            # to delete the UseCase from the related MUOContainer if it is in 'draft' or 'rejected' state
+            if (request.user == obj.created_by or request.user.has_perm('muo.can_edit_all')):
+                return super(AdviceAdminInLine, self).has_delete_permission(request, obj=None)
+            else:
+                # Set deletion permission to False
+                return False
+
+
+    def get_readonly_fields(self, request, obj=None):
+        """
+        Overriding the method such that all the fields on the UseCaseAdminInline form on change form
+        are read-only for all the users except the original author or users with 'can_edit_all' permission.
+        Only the original author or users with 'can_edit_all' permission can edit the fields that too
+        when the related MUOContainer is in the 'draft' state
+        """
+
+        if obj is None:
+            # This is add form, let super handle this
+            return []
+        else:
+            # All user can see advice
+            return list(set(
+                [field.name for field in self.opts.local_fields]
+            ))
+
+    def get_max_num(self, request, obj=None, **kwargs):
+        """
+        Overriding the method such that the 'Add another Advice' option on the AdviceAdminInline form
+        on change form is not available.
+        """
+        return 0
+
+
 @admin.register(UseCase)
 class UseCaseAdmin(BaseAdmin):
     fields = ['name', 'misuse_case', 'use_case_description', 'osr', 'tags']
@@ -141,7 +194,7 @@ class MUOContainerAdmin(BaseAdmin):
     search_fields = ['name', 'status']
     date_hierarchy = 'created_at'
     list_filter = ['status', 'is_published', ('created_by', admin.RelatedOnlyFieldListFilter)]
-    inlines = [UseCaseAdminInLine]
+    inlines = [UseCaseAdminInLine, AdviceAdminInLine]
 
     def get_actions(self, request):
         """
@@ -259,8 +312,9 @@ class MUOContainerAdmin(BaseAdmin):
                 msg = "This MUO has been published."
 
             elif "_advice" in request.POST:
-                advice= request.POST.get('advice_text', '')
-                obj.action_add_advice(advice)
+                advice_text = request.POST.get('advice_text', '')
+                advice_title = request.POST.get('advice_title', '')
+                obj.action_add_advice(advice_title,advice_text)
                 msg = "Add advice to this MUO."
             else:
                 # Let super class 'ModelAdmin' handle rest of the button clicks i.e. 'save' 'save and continue' etc.

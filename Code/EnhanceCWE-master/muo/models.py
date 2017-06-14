@@ -462,8 +462,8 @@ class MUOContainer(BaseModel):
             raise ValueError("MUO can only be published/unpublished if it is in approved state.")
     
     #to_do, write like action_reject
-    def action_add_advice(self, advice):
-        new_advice = Advice(muo=self,advice=advice)
+    def action_add_advice(self, advice_title, advice_text):
+        new_advice = Advice(muo=self, advice_title=advice_title, advice_text=advice_text)
         new_advice.save()
 
 
@@ -557,7 +557,8 @@ class UseCase(BaseModel):
 
 class Advice(BaseModel):
     muo = models.ForeignKey(MUOContainer,related_name = "muocontainer_id")
-    advice = models.CharField(max_length=1000)
+    advice_title = models.CharField(max_length=50)
+    advice_text = models.CharField(max_length=1000)
 
     class Meta:
         verbose_name = "Advice"
@@ -565,7 +566,7 @@ class Advice(BaseModel):
         default_permissions = ('view')
 
     def __unicode__(self):
-        return self.advice
+        return self.advice_title
 
 @receiver(post_save, sender=UseCase, dispatch_uid='usecase_post_save_signal')
 def post_save_usecase(sender, instance, created, using, **kwargs):

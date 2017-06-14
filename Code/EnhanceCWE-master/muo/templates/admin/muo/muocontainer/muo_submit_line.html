@@ -57,10 +57,12 @@
         <h4 class="modal-title">Advice {{ original }}</h4>
       </div>
       <div class="modal-body">
+        <textarea class="form-control" id="advice_title" name="advice_title" style="max-width: 100%"
+                  rows="1" placeholder="Modification Advice Title"></textarea>       
+        <br/>
         <textarea class="form-control" id="advice_text" name="advice_text" style="max-width: 100%"
-                  rows="3" placeholder="Modification Advice..."></textarea>
-
-          <p class="text-muted">Minimum characters: 15</p>
+                  rows="3" placeholder="Modification Advice Detailed discription..."></textarea>
+        <p class="text-muted">Minimum characters: 15</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
