@@ -54,7 +54,7 @@ class AdviceAdminInLine(admin.StackedInline):
 
         if obj is None:
             # This is add form, let super handle this
-            return super(AdiceAdminInLine, self).has_delete_permission(request, obj=None)
+            return super(AdviceAdminInLine, self).has_delete_permission(request, obj=None)
         else:
             # This is change form. Only original author or users with 'can_edit_all' permission are allowed
             # to delete the UseCase from the related MUOContainer if it is in 'draft' or 'rejected' state

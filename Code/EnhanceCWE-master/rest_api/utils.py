@@ -88,4 +88,19 @@ class rest_api:
         '''
         return {'success': False, 'msg': 'Cannot connect to Enhanced CWE system', 'obj': None}
 
-   
+    @staticmethod
+    def send_modification_advice(muo, title, content):
+        
+        rw_identifier = muo.rid[:muo.rid.rfind("_")]
+        url_string = rest_api.get_url(rw_identifier)
+        if not url_string:
+            return False
+
+        auth = rest_api.get_header(rw_identifier)
+        if not auth:
+            return False
+        post_data = {'id':muo.rid, 'title':title, 'content':content}
+
+        response = requests.post(url_string, headers=auth, data=post_data)
+        return True 
+       

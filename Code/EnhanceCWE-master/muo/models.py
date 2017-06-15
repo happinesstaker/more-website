@@ -26,6 +26,7 @@ from signals import *
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth.models import  User
+from rest_api.utils import rest_api
 
 STATUS = [('draft', 'Draft'),
           ('in_review', 'In Review'),
@@ -441,6 +442,7 @@ class MUOContainer(BaseModel):
         '''
         if self.is_custom == True and self.status == 'draft':
             self.status = 'approved'
+            self.is_published = True
             self.reviewed_by = reviewer
             self.save()
         else:
@@ -463,8 +465,12 @@ class MUOContainer(BaseModel):
     
     #to_do, write like action_reject
     def action_add_advice(self, advice_title, advice_text):
+        if self.rid and not rest_api.send_modification_advice(self, advice_title, advice_text):
+            raise ValueError("Failed to push back Modification Advice")
         new_advice = Advice(muo=self, advice_title=advice_title, advice_text=advice_text)
         new_advice.save()
+
+
 
 
 @receiver(pre_save, sender=MUOContainer, dispatch_uid='muo_container_pre_save_signal')
