@@ -22,6 +22,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from rest_api.utils import rest_api
+import os
+from ConfigParser import RawConfigParser
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+config = RawConfigParser()
+config.read(BASE_DIR + '/../../Deploy/config.ini')
 
 STATUS = [('draft', 'Draft'),
           ('in_review', 'In Review'),
@@ -123,6 +129,7 @@ class ReportManager(models.Manager):
 
 
 class Report(BaseModel):
+    rid = models.CharField(max_length=128, null=True, blank=True)
     name = models.CharField(max_length=16, null=True, blank=True, db_index=True, default="/")
     title = models.CharField(max_length=128, db_index=True)
     description = models.TextField()
@@ -187,6 +194,9 @@ class Report(BaseModel):
         """
         if self.status == 'draft':
             self.status = 'in_review'
+            self.save()
+            identifier = config.get('RW identifier','IDENTIFIER')
+            self.rid = identifier+'_'+str(self.id)
             self.save()
             # Send email
             report_submitted_review.send(sender=self, instance=self)
@@ -297,7 +307,7 @@ class Report(BaseModel):
 
         # Invoke the method which makes a rest call to the Enhanced CWE System and saves the MUO in that system
         # cwe_codes should be in the form of string separated by commas
-        muo_saved = rest_api.save_muos_to_enhanced_cwe(cwe_codes, misuse_case, use_case)
+        muo_saved = rest_api.save_muos_to_enhanced_cwe(cwe_codes, misuse_case, use_case, self.rid)
         if muo_saved['success']:
             muo_saved['msg'] = "The MUO has been promoted to Enhanced CWE Application"
             self.promoted = True

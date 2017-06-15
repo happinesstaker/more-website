@@ -214,7 +214,7 @@ class MUOContainer(BaseModel):
     status = models.CharField(choices=STATUS, max_length=64, default='draft')
     is_custom = models.BooleanField(default=False, db_index=True)
     is_published = models.BooleanField(default=False, db_index=True)
-    rw_identifier = models.CharField(max_length=256,null=True, blank=True)
+    rid = models.CharField(max_length=256,null=True, blank=True)
     objects = MUOManager()  # Replace the default manager with the MUOManager
 
     class Meta:
@@ -236,7 +236,7 @@ class MUOContainer(BaseModel):
             return ''
 
     @staticmethod
-    def create_custom_muo(cwe_ids, misusecase, usecase, created_by, rw_identifier=""):
+    def create_custom_muo(cwe_ids, misusecase, usecase, created_by, rid=""):
         '''
         This is a static method that creates a custom MUO. It also established the relationship between the
         objects that has to be related on MUO creation i.e. relationship between cwes and misuse case, cwes
@@ -291,7 +291,7 @@ class MUOContainer(BaseModel):
                                          misuse_case=misuse_case,
                                          created_by=created_by,
                                          created_at=timezone.now(),
-                                         rw_identifier = rw_identifier
+                                         rid = rid
                                          )
             muo_container.save()
             muo_container.cwes.add(*cwe_objects) # Establish the relationship between the muo container and cwes

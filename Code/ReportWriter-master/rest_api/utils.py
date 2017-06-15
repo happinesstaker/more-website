@@ -190,7 +190,7 @@ class rest_api:
 
 
     @staticmethod
-    def save_muos_to_enhanced_cwe(cwe_codes, misuse_case, use_case):
+    def save_muos_to_enhanced_cwe(cwe_codes, misuse_case, use_case, rid):
         '''
         This method makes a REST call to Enhanced CWE system to save the misuse case, use case and overlooked security
         requirements to the Enhanced CWE system
@@ -204,7 +204,7 @@ class rest_api:
         payload = {'cwes': json.dumps(cwe_codes),
                    'muc': json.dumps(misuse_case),
                    'uc': json.dumps(use_case),
-                   'rw_identifier': config.get('RW identifier','IDENTIFIER')
+                   'rid':rid
 
                    }
         url_string = '%s/custom_muo/save' % rest_api.get_url()

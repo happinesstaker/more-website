@@ -503,7 +503,7 @@ class SaveCustomMUO(APIView):
     PARAM_CWE_CODES = "cwes"
     PARAM_MISUSE_CASE = "muc"
     PARAM_USE_CASE = "uc"
-    PARAM_RW_IDENTIFIER = "rw_identifier"
+    PARAM_RID = "rid"
 
     TEMPLATE_MISUSE_CASE = {
         "misuse_case_description": "",
@@ -537,8 +537,8 @@ class SaveCustomMUO(APIView):
             sections_missing.append(SaveCustomMUO.PARAM_MISUSE_CASE)
         if SaveCustomMUO.PARAM_USE_CASE not in data_dict:
             sections_missing.append(SaveCustomMUO.PARAM_USE_CASE)
-        if SaveCustomMUO.PARAM_RW_IDENTIFIER not in data_dict:
-            sections_missing.append(SaveCustomMUO.PARAM_RW_IDENTIFIER)
+        if SaveCustomMUO.PARAM_RID not in data_dict:
+            sections_missing.append(SaveCustomMUO.PARAM_RID)
 
         return sections_missing
 
@@ -677,8 +677,8 @@ class SaveCustomMUO(APIView):
         creator = User.objects.get(username=request.user.username)
 
         #check if rw_identifier exist in request
-        if self.PARAM_RW_IDENTIFIER not in request.data:
-            err_msg = self._form_err_msg_fields_missing("rw_identifier", fields_missing)
+        if self.PARAM_RID not in request.data:
+            err_msg = self._form_err_msg_fields_missing("rid", fields_missing)
             return Response(data=err_msg, status=status.HTTP_400_BAD_REQUEST)
 
         # Save the custom MUO.
@@ -687,7 +687,7 @@ class SaveCustomMUO(APIView):
                                            misusecase=muc_dict,
                                            usecase=uc_dict,
                                            created_by=creator,
-                                           rw_identifier = request.data[self.PARAM_RW_IDENTIFIER]
+                                           rid = request.data[self.PARAM_RID]
                                            )
         except Exception as e:
             return Response(data=e.message, status=status.HTTP_400_BAD_REQUEST)
