@@ -1,10 +1,17 @@
 jQuery(function() {
 
-    //Submit the form on pressing enter (key 13), but not while holding space
+    //Submit the form on pressing enter (key 13), but not while holding shift
     $("body").on('keypress', 'textarea[id=id_comment]', function() {
         if ((event.which == 13) && !event.shiftKey) {
             var form = $(this).parents('form:first');
             form.submit();
+
+            // increment counter
+            var id = $(this).parents('.comments-container').attr('id').split('-')[2];
+            var prevCtr = $("#comments-ctr-"+id).text().trim().split(" ")[0];
+            var newCtr = '' + (parseInt(prevCtr) + 1) + ' comments';
+            $("#comments-ctr-"+id).text(newCtr);
+
             return false;
         }
     });
@@ -17,6 +24,12 @@ jQuery(function() {
         var comment_id = $(this).data('value');
         var url = $(this).data('ajax-url');
 
+        // decrement counter
+        var id = $(this).parents('.comments-container').attr('id').split('-')[2];
+        var ctrDiv = $("#comments-ctr-"+id)
+        var prevCtr = ctrDiv.text().trim().split(" ")[0];
+        var newCtr = '' + (parseInt(prevCtr) - 1) + ' comments';
+
         $.ajax({
             url: url,
             type: 'POST',
@@ -28,6 +41,7 @@ jQuery(function() {
                     comment.hide("normal",function(){
                         comment.remove();
                     })
+                    ctrDiv.text(newCtr);
                 } else {
                     alert("Oops! Could not delete the comment!")
                 }

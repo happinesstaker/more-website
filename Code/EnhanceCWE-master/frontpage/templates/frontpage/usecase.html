@@ -98,7 +98,9 @@
                         <a href="#comments-block-{{ usecase.id }}" class="btn btn-xs">
                         <span class="fa fa-comment-o ">
                         </span>
-                        {% get_comment_count for usecase as comment_count %} {{ comment_count }} comments
+                        <span id="comments-ctr-{{ usecase.id }}">
+                          {% get_comment_count for usecase as comment_count %} {{ comment_count }} comments
+                        </span>
                         </a>
                     {% endif %}
 
@@ -129,4 +131,3 @@
 
 
 </div>
-
