@@ -665,14 +665,23 @@ class SaveCustomMUO(APIView):
             err_msg = self._form_err_msg_fields_missing("rid", fields_missing)
             return Response(data=err_msg, status=status.HTTP_400_BAD_REQUEST)
 
-        # Save the custom MUO.
+        #check if muo exist before save custom MUO
+        muo_objects = MUOContainer.objects.filter(rid=request.data[self.PARAM_RID])
         try:
-            MUOContainer.create_custom_muo(cwe_ids=cwe_code_list,
-                                           misusecase=muc_dict,
-                                           usecase=uc_dict,
-                                           created_by=creator,
-                                           rid = request.data[self.PARAM_RID]
-                                           )
+            if len(muo_objects) >= 1:
+                #Update MUO
+                muo_objects[0].update_custom_muo(cwe_ids=cwe_code_list,
+                                                 misusecase=muc_dict,
+                                                 usecase=uc_dict                                          
+                                                 )
+            else:
+                #Save the custom MUO.
+                MUOContainer.create_custom_muo(cwe_ids=cwe_code_list,
+                                               misusecase=muc_dict,
+                                               usecase=uc_dict,
+                                               created_by=creator,
+                                               rid = request.data[self.PARAM_RID]
+                                               )
         except Exception as e:
             return Response(data=e.message, status=status.HTTP_400_BAD_REQUEST)
 

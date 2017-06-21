@@ -36,6 +36,13 @@ from base.admin import BaseAdmin
 #     fields = ['name']
 #     search_fields = ['name']
 
+@admin.register(Advice)
+class AdviceAdmin(BaseAdmin):
+    fields = ['advice_title','advice_text']
+    readonly_fields = ['advice_title','advice_text']
+    list_display = ['advice_title']
+    search_fields = ['advice_title']
+
 
 class AdviceAdminInLine(admin.StackedInline):
     model = Advice
@@ -46,23 +53,9 @@ class AdviceAdminInLine(admin.StackedInline):
 
     def has_delete_permission(self, request, obj=None):
         """
-        Overriding the method such that the delete option on the AdviceAdminInline form on change form
-        is not available for the users except the original author or users with 'can_edit_all' permission.
-        The delete option is only available to the original author or users with 'can_edit_all' permission
-        if the related MUOContainer is in draft or rejected state
+        Hide delete checkbox in inline forms
         """
-
-        if obj is None:
-            # This is add form, let super handle this
-            return super(AdviceAdminInLine, self).has_delete_permission(request, obj=None)
-        else:
-            # This is change form. Only original author or users with 'can_edit_all' permission are allowed
-            # to delete the UseCase from the related MUOContainer if it is in 'draft' or 'rejected' state
-            if (request.user == obj.created_by or request.user.has_perm('muo.can_edit_all')):
-                return super(AdviceAdminInLine, self).has_delete_permission(request, obj=None)
-            else:
-                # Set deletion permission to False
-                return False
+        return False
 
 
     def get_readonly_fields(self, request, obj=None):
@@ -313,7 +306,7 @@ class MUOContainerAdmin(BaseAdmin):
 
             elif "_advice" in request.POST:
                 advice_text = request.POST.get('advice_text', '')
-                advice_title = request.POST.get('advice_title', '')
+                advice_title = request.POST.get('advice_title', 'No Title')
                 obj.action_add_advice(advice_title,advice_text)
                 msg = "Add advice to this MUO."
             else:

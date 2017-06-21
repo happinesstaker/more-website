@@ -236,6 +236,97 @@ class MUOContainer(BaseModel):
         else:
             return ''
 
+    
+    def update_custom_muo(self, cwe_ids, misusecase, usecase):
+        '''
+        This is a static method that update a custom MUO. 
+        :param cwe_ids: (LIST of Integers) List of CWE IDs
+        :param misusecase: (Dictionary) Dictionary contaning all the fields of the misuse case
+        :param usecase: (Dictionary) Dictionary containing all the fields of the use case
+        :param created_by: (USER)
+        :return: Void
+        '''
+        
+        cwe_objects = list(CWE.objects.filter(code__in=cwe_ids))
+
+        if len(cwe_objects) != len(cwe_ids):
+            # The count of objects returned from the database for the CWE ids passed didn't match the
+            # count of the the list of cwe ids. This means some of the IDs were invalid and don't exist
+            # in the database.
+            raise ValueError("Looks like there are CWE IDs, which are not valid")
+
+        with transaction.atomic():
+            # This block should be inside the atmoic context manager because if any of the database transaction
+            # fails, all the previous database transaction must be rolled back
+
+            # Get all the fields from the misuse case dictionary
+            misuse_case_description = MUOContainer.get_value_for_key_in_dict(misusecase, 'misuse_case_description')
+            misuse_case_primary_actor = MUOContainer.get_value_for_key_in_dict(misusecase, 'misuse_case_primary_actor')
+            misuse_case_secondary_actor = MUOContainer.get_value_for_key_in_dict(misusecase, 'misuse_case_secondary_actor')
+            misuse_case_precondition = MUOContainer.get_value_for_key_in_dict(misusecase, 'misuse_case_precondition')
+            misuse_case_flow_of_events = MUOContainer.get_value_for_key_in_dict(misusecase, 'misuse_case_flow_of_events')
+            misuse_case_postcondition = MUOContainer.get_value_for_key_in_dict(misusecase, 'misuse_case_postcondition')
+            misuse_case_assumption = MUOContainer.get_value_for_key_in_dict(misusecase, 'misuse_case_assumption')
+            misuse_case_source = MUOContainer.get_value_for_key_in_dict(misusecase, 'misuse_case_source')
+
+            #update misuse case and the relationship with the CWEs
+            cur_misuse_case = self.misuse_case
+            cur_misuse_case.misuse_case_description = misuse_case_description
+            cur_misuse_case.misuse_case_primary_actor = misuse_case_primary_actor
+            cur_misuse_case.misuse_case_secondary_actor = misuse_case_secondary_actor
+            cur_misuse_case.misuse_case_precondition = misuse_case_precondition
+            cur_misuse_case.misuse_case_flow_of_events = misuse_case_flow_of_events
+            cur_misuse_case.misuse_case_postcondition = misuse_case_postcondition
+            cur_misuse_case.misuse_case_assumption = misuse_case_assumption
+            cur_misuse_case.misuse_case_source = misuse_case_source
+           
+            cur_misuse_case.save()
+            cur_misuse_case.cwes.clear()
+            cur_misuse_case.cwes.add(*cwe_objects)  # Establish the relationship between the misuse case and CWEs
+
+            # Update the MUO container for the misuse case and establish the relationship between the
+            # MUO Container and CWEs
+            self.is_custom = True
+            self.is_published = False
+            self.status = 'draft'
+            self.created_at = timezone.now()
+
+            self.save()
+            self.cwes.clear()
+            self.cwes.add(*cwe_objects) # Establish the relationship between the muo container and cwes
+
+            # Get all the values from the use case dictionary
+            use_case_description = MUOContainer.get_value_for_key_in_dict(usecase, 'use_case_description')
+            use_case_primary_actor = MUOContainer.get_value_for_key_in_dict(usecase, 'use_case_primary_actor')
+            use_case_secondary_actor = MUOContainer.get_value_for_key_in_dict(usecase, 'use_case_secondary_actor')
+            use_case_precondition = MUOContainer.get_value_for_key_in_dict(usecase, 'use_case_precondition')
+            use_case_flow_of_events = MUOContainer.get_value_for_key_in_dict(usecase, 'use_case_flow_of_events')
+            use_case_postcondition = MUOContainer.get_value_for_key_in_dict(usecase, 'use_case_postcondition')
+            use_case_assumption = MUOContainer.get_value_for_key_in_dict(usecase, 'use_case_assumption')
+            use_case_source = MUOContainer.get_value_for_key_in_dict(usecase, 'use_case_source')
+            osr_pattern_type = MUOContainer.get_value_for_key_in_dict(usecase, 'osr_pattern_type')
+            osr = MUOContainer.get_value_for_key_in_dict(usecase, 'osr')
+
+            
+
+            # Update the Use case for the Misuse Case and MUO Container
+            cur_use_case = UseCase.objects.filter(misuse_case=self.misuse_case, 
+                muo_container=self)
+            if cur_use_case:
+                cur_use_case = cur_use_case[0]
+                cur_use_case.use_case_description = use_case_description
+                cur_use_case.use_case_primary_actor = use_case_primary_actor
+                cur_use_case.use_case_secondary_actor = use_case_secondary_actor
+                cur_use_case.use_case_precondition = use_case_precondition
+                cur_use_case.use_case_flow_of_events = use_case_flow_of_events
+                cur_use_case.use_case_postcondition = use_case_postcondition
+                cur_use_case.use_case_assumption = use_case_assumption
+                cur_use_case.use_case_source = use_case_source
+                cur_use_case.osr_pattern_type = osr_pattern_type
+                cur_use_case.osr = osr
+
+                cur_use_case.save()
+
     @staticmethod
     def create_custom_muo(cwe_ids, misusecase, usecase, created_by, rid=""):
         '''
@@ -325,6 +416,7 @@ class MUOContainer(BaseModel):
                                created_by=created_by,
                                created_at=timezone.now())
             use_case.save()
+
 
 
     def __unicode__(self):
@@ -562,7 +654,7 @@ class UseCase(BaseModel):
         pass
 
 class Advice(BaseModel):
-    muo = models.ForeignKey(MUOContainer,related_name = "muocontainer_id")
+    muo = models.ForeignKey(MUOContainer,on_delete=models.PROTECT,related_name = "muocontainer_id")
     advice_title = models.CharField(max_length=50)
     advice_text = models.CharField(max_length=1000)
 

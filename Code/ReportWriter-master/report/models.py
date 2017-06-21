@@ -416,3 +416,16 @@ def post_save_issue_report(sender, instance, created, using, **kwargs):
     if created:
         instance.name = "Issue-{0:05d}".format(instance.id)
         instance.save()
+
+class Advice(BaseModel):
+    report = models.ForeignKey(Report,related_name = "report_id")
+    advice_title = models.CharField(max_length=50)
+    advice_text = models.CharField(max_length=1000)
+
+    class Meta:
+        verbose_name = "Advice"
+        verbose_name_plural = "Advice"
+        default_permissions = ('view')
+
+    def __unicode__(self):
+        return self.advice_title

@@ -37,6 +37,50 @@ from rest_api.utils import rest_api
 from models import *
 from .settings import SELECT_CWE_PAGE_LIMIT
 
+@admin.register(Advice)
+class AdviceAdmin(BaseAdmin):
+    fields = ['advice_title','advice_text']
+    readonly_fields = ['advice_title','advice_text']
+    list_display = ['advice_title']
+    search_fields = ['advice_title']
+
+class AdviceAdminInLine(admin.StackedInline):
+    model = Advice
+    extra = 0
+    fields = ['advice_title','advice_text']
+    readonly_fields = ['advice_title','advice_text']
+
+
+    def has_delete_permission(self, request, obj=None):
+        """
+        Hide the delete checkbox in inline forms
+        """
+        return False
+
+
+    def get_readonly_fields(self, request, obj=None):
+        """
+        Overriding the method such that all the fields on the UseCaseAdminInline form on change form
+        are read-only for all the users except the original author or users with 'can_edit_all' permission.
+        Only the original author or users with 'can_edit_all' permission can edit the fields that too.
+        """
+
+        if obj is None:
+            # This is add form, let super handle this
+            return []
+        else:
+            # All user can see advice
+            return list(set(
+                [field.name for field in self.opts.local_fields]
+            ))
+
+    def get_max_num(self, request, obj=None, **kwargs):
+        """
+        Overriding the method such that the 'Add another Advice' option on the AdviceAdminInline form
+        on change form is not available.
+        """
+        return 0
+
 
 @admin.register(CWE)
 class CWEAdmin(BaseAdmin):
@@ -130,6 +174,7 @@ class ReportAdmin(BaseAdmin):
     search_fields = ['title', 'status', 'custom']
     list_display = ['name', 'created_by', 'status']
     raw_id_fields = ['cwes']
+    inlines = [AdviceAdminInLine]
 
 
     def get_actions(self, request):
