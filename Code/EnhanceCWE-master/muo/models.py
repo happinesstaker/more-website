@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -61,6 +61,7 @@ class Tag(BaseModel):
 
     def __unicode__(self):
         return self.name
+
 
 class MUOQuerySet(models.QuerySet):
     """
@@ -236,17 +237,17 @@ class MUOContainer(BaseModel):
         else:
             return ''
 
-    
+
     def update_custom_muo(self, cwe_ids, misusecase, usecase):
         '''
-        This is a static method that update a custom MUO. 
+        This is a static method that update a custom MUO.
         :param cwe_ids: (LIST of Integers) List of CWE IDs
         :param misusecase: (Dictionary) Dictionary contaning all the fields of the misuse case
         :param usecase: (Dictionary) Dictionary containing all the fields of the use case
         :param created_by: (USER)
         :return: Void
         '''
-        
+
         cwe_objects = list(CWE.objects.filter(code__in=cwe_ids))
 
         if len(cwe_objects) != len(cwe_ids):
@@ -279,7 +280,7 @@ class MUOContainer(BaseModel):
             cur_misuse_case.misuse_case_postcondition = misuse_case_postcondition
             cur_misuse_case.misuse_case_assumption = misuse_case_assumption
             cur_misuse_case.misuse_case_source = misuse_case_source
-           
+
             cur_misuse_case.save()
             cur_misuse_case.cwes.clear()
             cur_misuse_case.cwes.add(*cwe_objects)  # Establish the relationship between the misuse case and CWEs
@@ -307,10 +308,10 @@ class MUOContainer(BaseModel):
             osr_pattern_type = MUOContainer.get_value_for_key_in_dict(usecase, 'osr_pattern_type')
             osr = MUOContainer.get_value_for_key_in_dict(usecase, 'osr')
 
-            
+
 
             # Update the Use case for the Misuse Case and MUO Container
-            cur_use_case = UseCase.objects.filter(misuse_case=self.misuse_case, 
+            cur_use_case = UseCase.objects.filter(misuse_case=self.misuse_case,
                 muo_container=self)
             if cur_use_case:
                 cur_use_case = cur_use_case[0]
@@ -554,7 +555,7 @@ class MUOContainer(BaseModel):
                 self.save()
         else:
             raise ValueError("MUO can only be published/unpublished if it is in approved state.")
-    
+
     #to_do, write like action_reject
     def action_add_advice(self, advice_title, advice_text):
         if self.rid and not rest_api.send_modification_advice(self, advice_title, advice_text):
@@ -666,6 +667,11 @@ class Advice(BaseModel):
     def __unicode__(self):
         return self.advice_title
 
+class Vote(BaseModel):
+    usecase = models.ForeignKey(UseCase, on_delete=models.PROTECT, related_name="vote_usecase_id")
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="vote_user_id")
+
+
 @receiver(post_save, sender=UseCase, dispatch_uid='usecase_post_save_signal')
 def post_save_usecase(sender, instance, created, using, **kwargs):
     """ Set the value of the field 'name' after creating the object """
@@ -755,4 +761,3 @@ def post_save_issue_report(sender, instance, created, using, **kwargs):
     if created:
         instance.name = "Issue-{0:05d}".format(instance.id)
         instance.save()
-

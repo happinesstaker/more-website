@@ -75,7 +75,6 @@ jQuery(function() {
         }
     });
 
-
     $("#muo-modal").on("show.bs.modal", function (e) {
         var usecase_id = $(e.relatedTarget).data('usecase-id');
         var url = $(e.relatedTarget).data('ajax-url');
@@ -97,6 +96,10 @@ jQuery(function() {
         });
     });
 
+    $("body").on('click', 'a.vote-toggle', function(){
+        var use_case_id = $($(this).find("span")[1]).attr("id").split('-')[2];
+        post_vote(use_case_id);
+    });
 
     $("body").on('click', '#muo_see_more', function(e){
         // stop propagating the click event to misuse-case-container
@@ -128,7 +131,6 @@ jQuery(function() {
     });
 
 });
-
 
 
 function load_usecases(misuse_case_id) {
@@ -179,6 +181,40 @@ function load_misusecases(cwe_ids, search_term) {
 
             var misuse_case_filter = $('#filter_misuse_case');
             misuse_case_filter.focus().val(misuse_case_filter.val());
+        },
+
+        error: function(xhr,errmsg,err) {
+            // Show error message in the alert
+            alert("Oops! We have encountered and error \n" + errmsg);
+        }
+    });
+}
+
+function post_vote(use_case_id) {
+    $.ajax({
+        url: 'post_vote/',
+        type: 'POST',
+        data: {use_case_id: use_case_id}, // Send the usecase id of this vote
+
+        success: function(result) {
+            $($('#vote-ctr-'+use_case_id).find("font")[0]).replaceWith(result);
+        },
+
+        error: function(xhr,errmsg,err) {
+            // Show error message in the alert
+            alert("Oops! We have encountered and error \n" + errmsg);
+        }
+    });
+}
+
+function get_vote(use_case_id) {
+    $.ajax({
+        url: 'get_vote/',
+        type: 'POST',
+        data: {use_case_id: use_case_id}, // Send the usecase id of this vote
+
+        success: function(result) {
+            $($('#vote-ctr-'+use_case_id).find("font")[0]).replaceWith(result);
         },
 
         error: function(xhr,errmsg,err) {

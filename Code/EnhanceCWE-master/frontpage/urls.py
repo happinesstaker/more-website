@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -19,6 +19,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^get_cwes/$', views.get_cwes, name='get_cwes'),
+    url(r'^post_vote/$', views.post_vote, name='post_vote'),
     url(r'^get_misusecases/$', views.get_misusecases, name='get_misusecases'),
     url(r'^get_usecases/$', views.get_usecases, name='get_usecases'),
     url(r'^create_issue_report/$', views.create_issue_report, name='create_issue_report'),

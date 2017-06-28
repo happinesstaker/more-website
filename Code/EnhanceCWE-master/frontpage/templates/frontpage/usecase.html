@@ -3,7 +3,7 @@
 <script type="text/javascript" src="{% static 'fluent_comments/js/ajaxcomments.js' %}"></script>
 
 <div class="fat-scroll-div">
-    {% for usecase in use_cases %}
+    {% for usecase, vote in context %}
         <div class="use-case-container">
             <div class="use-case-header">
                 <label class="pull-left">Use Case: {{ usecase.name }}</label>
@@ -88,21 +88,29 @@
 
             <div class="usecase-footer">
                 <div class="pull-left">
-{#                    <a href="" class="btn btn-xs">#}
-{#                        <span class="fa fa-thumbs-o-up"></span>#}
-{#                    </a>#}
-{#                    <a href="" class="btn btn-xs">#}
-{#                        <span class="fa fa-thumbs-o-down"></span>#}
-{#                    </a>#}
-                    {% if user.is_authenticated %}
-                        <a href="#comments-block-{{ usecase.id }}" class="btn btn-xs">
+
+                  <!-- <a href="#" class="btn btn-xs"> -->
+                  <!--     <span class="fa fa-thumbs-o-down"></span> -->
+                  <!-- </a> -->
+                  {% if user.is_authenticated %}
+                  <a href="#" class="btn btn-xs vote-toggle">
+                    <span class="fa fa-thumbs-o-up"></span>
+                    <span id="vote-ctr-{{ usecase.id }}">
+                      {% if vote.is_voted %}
+                      <font color="red">{{ vote.count }}</font>
+                      {% else %}
+                      <font>{{ vote.count }}</font>
+                      {% endif %}
+                    </span>
+                  </a>
+                  <a href="#comments-block-{{ usecase.id }}" class="btn btn-xs">
                         <span class="fa fa-comment-o ">
                         </span>
                         <span id="comments-ctr-{{ usecase.id }}">
                           {% get_comment_count for usecase as comment_count %} {{ comment_count }} comments
                         </span>
-                        </a>
-                    {% endif %}
+                  </a>
+                  {% endif %}
 
                 </div>
 

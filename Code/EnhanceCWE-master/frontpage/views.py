@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -17,12 +17,13 @@ import autocomplete_light
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.http import HttpResponse
 from django.http import Http404, JsonResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.response import TemplateResponse
 from django.utils.safestring import mark_safe
 from cwe.models import CWE
-from muo.models import MisuseCase, UseCase, IssueReport
+from muo.models import MisuseCase, UseCase, IssueReport, Vote
 from .settings import SELECT_CWE_PAGE_LIMIT
 
 
@@ -98,10 +99,46 @@ def get_usecases(request):
     misuse_case_id = request.POST['misuse_case_id']
     misuse_case = get_object_or_404(MisuseCase, pk=misuse_case_id)
 
+    usecase_set = misuse_case.usecase_set.approved()
+    votes = []
+    for usecase in usecase_set:
+        votes.append({'count': len(list(Vote.objects.filter(usecase=usecase))),
+                      'is_voted': len(list(Vote.objects.filter(usecase=usecase, user=request.user))) != 0
+        })
+
+    print votes
+
     #  Create a context with all the corresponding use cases
-    context = {'use_cases': misuse_case.usecase_set.approved()}
+    context = {'context': zip(usecase_set, votes)}
 
     return TemplateResponse(request, "frontpage/usecase.html", context)
+
+def post_vote(request):
+    if not request.is_ajax():
+        raise HttpResponseForbidden()
+
+    usecase_id = request.POST['use_case_id']
+    usecase = get_object_or_404(UseCase, pk=usecase_id)
+    user = request.user
+
+    vote = Vote.objects.filter(user=user, usecase=usecase)
+
+    # If Vote not in DB, create it.
+    if not vote:
+        new_vote = Vote(user=user, usecase=usecase)
+        new_vote.save()
+        is_voted = True
+    else:
+        old_vote = vote[0]
+        old_vote.delete()
+        is_voted = False
+
+    new_count = len(Vote.objects.filter(usecase=usecase))
+
+    if is_voted:
+        return HttpResponse('<font color="red">'+str(new_count)+'</font>')
+    else:
+        return HttpResponse('<font>' + str(new_count) + '</font>')
 
 
 def create_issue_report(request):
@@ -148,4 +185,3 @@ def process_issue_report(request):
 
     else:
         raise Http404("Invalid access using GET request!")
-
