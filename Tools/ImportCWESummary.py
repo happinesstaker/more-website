@@ -16,13 +16,21 @@ from django.db import IntegrityError
 from lxml import etree
 import re
 import traceback
+import os
 
 
 NAMESPACE = {'capec':'http://capec.mitre.org/capec-2'}
+STOPWORDS = []
 
 def getNsTagged(tag):
     ns = 'http://www.w3.org/2001/XMLSchema-instance'
     return '{%s}%s' % (ns, tag)
+
+def readStopWords():
+    with open(os.getcwd() + 'cwe/stopwords.txt', 'r') as f:
+        for line in f:
+            for word in line.split():
+                STOPWORDS.append(word)
 
 def readXML():
     parser = etree.XMLParser(remove_blank_text=True)
@@ -38,18 +46,17 @@ def readXML():
             Name = weakness.get('Name')
 
             keywordList = list()
-            keywords = Name.split()
+            keywords = cwe_search.remove_stopwords(Name)
+            keywords = cwe_search.stem_text(keywords)
             for keyword in keywords:
                 # since keyword is stemmed before save, we cannot simply use get_or_create
-                stemmed_name = cwe_search.stem_text([keyword.lower()])
-                if stemmed_name:
-                    try:
-                        tryKeyword = Keyword.objects.get(name=stemmed_name[0])
-                    except Keyword.DoesNotExist:
-                        # No exist stemmed keyword in DB, create and add
-                        tryKeyword = Keyword(name=keyword)
-                        tryKeyword.save()
-                    keywordList.append(tryKeyword)
+                try:
+                    tryKeyword = Keyword.objects.get(name=keyword)
+                except Keyword.DoesNotExist:
+                    # No exist stemmed keyword in DB, create and add
+                    tryKeyword = Keyword(name=keyword)
+                    tryKeyword.save()
+                keywordList.append(tryKeyword)
 
             descriptionString = ""
 
@@ -71,5 +78,7 @@ def readXML():
         traceback.print_exc()
 
 def run():
+    print "Building Stop Word List..."
+    readStopWords()
     print "Start Analyzing XML..."
     readXML()
