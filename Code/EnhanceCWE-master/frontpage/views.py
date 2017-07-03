@@ -100,13 +100,15 @@ def get_usecases(request):
     misuse_case = get_object_or_404(MisuseCase, pk=misuse_case_id)
 
     usecase_set = misuse_case.usecase_set.approved()
-    votes = []
-    for usecase in usecase_set:
-        votes.append({'count': len(list(Vote.objects.filter(usecase=usecase))),
-                      'is_voted': len(list(Vote.objects.filter(usecase=usecase, user=request.user))) != 0
-        })
 
-    print votes
+    votes = []
+    if request.user.is_authenticated():
+        for usecase in usecase_set:
+            votes.append({'count': len(list(Vote.objects.filter(usecase=usecase))),
+                          'is_voted': len(list(Vote.objects.filter(usecase=usecase, user=request.user))) != 0
+            })
+    else:
+        votes = [None] * len(usecase_set)
 
     #  Create a context with all the corresponding use cases
     context = {'context': zip(usecase_set, votes)}
