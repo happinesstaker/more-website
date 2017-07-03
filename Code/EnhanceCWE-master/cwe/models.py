@@ -71,7 +71,7 @@ def pre_save_keyword(sender, instance, *args, **kwargs):
 
             # raise an error if the stemmed name already exist in the database
             if Keyword.objects.filter(name__exact=stemmed_name).exists():
-                raise IntegrityError("Keyword stemmed name (%s) already exist!" % stemmed_name)
+               raise IntegrityError("Keyword stemmed name (%s) already exist!" % stemmed_name)
             else:
                 instance.name = stemmed_name
 

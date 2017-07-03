@@ -17,6 +17,7 @@ from lxml import etree
 import re
 import traceback
 import os
+from nltk.stem.porter import *
 
 
 NAMESPACE = {'capec':'http://capec.mitre.org/capec-2'}
@@ -27,7 +28,7 @@ def getNsTagged(tag):
     return '{%s}%s' % (ns, tag)
 
 def readStopWords():
-    with open(os.getcwd() + 'cwe/stopwords.txt', 'r') as f:
+    with open(os.getcwd() + '/cwe/stopwords.txt', 'r') as f:
         for line in f:
             for word in line.split():
                 STOPWORDS.append(word)
@@ -47,11 +48,11 @@ def readXML():
 
             keywordList = list()
             keywords = cwe_search.remove_stopwords(Name)
-            keywords = cwe_search.stem_text(keywords)
+            st = PorterStemmer()
             for keyword in keywords:
                 # since keyword is stemmed before save, we cannot simply use get_or_create
                 try:
-                    tryKeyword = Keyword.objects.get(name=keyword)
+                    tryKeyword = Keyword.objects.get(name=st.stem(keyword))
                 except Keyword.DoesNotExist:
                     # No exist stemmed keyword in DB, create and add
                     tryKeyword = Keyword(name=keyword)
