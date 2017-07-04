@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -64,19 +64,19 @@ class CWEAllList(APIView):
     @staticmethod
     def _validate_title_contains(title_contains):
         return len(title_contains) <= FIELD_LENGTH_CWE_NAME
-    
+
     @staticmethod
     def _form_err_msg_not_positive_integer(param_name, param_value):
         return ("Invalid arguments: '" + param_name +
                 "' should be a positive integer like '101', but now '" + param_name +
                 "' = '" + param_value + "'")
-    
+
     @staticmethod
     def _form_err_msg_both_present(param_name1, param_name2):
         return ("Invalid arguments: '" + param_name1 +
                 "' and '" + param_name2 + "' should not be present at the same time."
                 )
-    
+
     @staticmethod
     def _form_err_msg_too_long(param_name, param_value):
         return ("Invalid argument: '" + param_name + "' should not be longer than " +
@@ -165,9 +165,9 @@ class CWEAllList(APIView):
         else:
             # If offset is too large and exceeds the size of CWE objects, we return an empty list.
             cwe_returned = list()
-        
+
         serializer = CWESerializer(cwe_returned, many=True)
-        
+
         # Return both the CWE objects and the total count.
         returned_data = {
             self.RESPONSE_KEY_CWE_OBJECTS: serializer.data,
@@ -238,6 +238,14 @@ class CWESearchSingleString(APIView):
         # we can only treat it as an arbitrary string.
         search_str = request.GET.get(self.PARAM_SEARCH_STR)
 
+        # if search string is CWE ID, return exact match, otherwise, use search algorithm registered to search matched CWE
+        if search_str.isdigit():
+            cwe_objects = list(CWE.objects.all().filter(Q(code=search_str) | Q(name__icontains=search_str)))
+        else:
+            cwe_count_tuples = CWESearchLocator.get_instance().search_cwes(search_str)
+            cwe_objects = [cwe_count_tuple[0] for cwe_count_tuple in cwe_count_tuples]
+
+        '''
         # Now the arguments should be valid.
         cwe_objects = CWE.objects.all()
         # Filter the CWE objects according to search_str. We search this string in code and name.
@@ -249,12 +257,13 @@ class CWESearchSingleString(APIView):
                 # Otherwise, we only search in 'name'.
                 cwe_objects = cwe_objects.filter(name__icontains=search_str)
 
+        '''
         # Now we have all the CWE objects that meet the search criteria.
         # Count how many CWE objects there are totally before applying the offset and limit.
         # This total count is helpful for pagination.
-        cwe_objects_total_count = cwe_objects.count()
+        cwe_objects_total_count = len(cwe_objects)
 
-        if offset < cwe_objects.count():
+        if offset < cwe_objects_total_count:
             cwe_returned = cwe_objects[offset:offset+limit]
         else:
             # If offset is too large and exceeds the size of CWE objects, we return an empty list.
@@ -672,7 +681,7 @@ class SaveCustomMUO(APIView):
                 #Update MUO
                 muo_objects[0].update_custom_muo(cwe_ids=cwe_code_list,
                                                  misusecase=muc_dict,
-                                                 usecase=uc_dict                                          
+                                                 usecase=uc_dict
                                                  )
             else:
                 #Save the custom MUO.

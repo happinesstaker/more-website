@@ -53,11 +53,12 @@
                                     data-ajax-url="{% url 'admin:report_report_get_cwes' %}"
                                     data-init-url="{% url 'admin:report_report_init_cwes' %}"
                                     data-report-id="{{ object_id|default_if_none:'' }}"
-                                    data-page-limit="{{ cwe_limit }}" style="width:87%"></select>
+                                    data-page-limit="{{ cwe_limit }}" style="width:100%"></select>
 
-                            <button type="button" class="btn btn-success btn-md" id="cwe-suggestion-button"
-                                    data-ajax-url="{% url 'admin:report_report_suggest_cwes' %}" style="float:right; width:12%">Suggest CWEs
-                            </button>
+                            <!-- Now the button is not used -->
+                            <!-- <button type="button" class="btn btn-success btn-md" id="cwe-suggestion-button" -->
+                            <!--         data-ajax-url="{% url 'admin:report_report_suggest_cwes' %}" style="float:right; width:12%">Suggest CWEs -->
+                            <!-- </button> -->
                         </div>
 
                         {% if form.cwes.errors %}

@@ -16,16 +16,21 @@ jQuery(function() {
 
     // Make CWE selection a multiple ajax select2
     cwe_select.select2({
-        placeholder: "Either click 'Suggest CWEs' to get the suggest CWE based on your description or select a CWE from the list",
+        placeholder: "Click to get the suggest CWE based on your description or type your search keyword",
         ajax: {
             url: $(this).data('ajax-url'),
             dataType: 'json',
-            delay: 250,
+            delay: 500,
             data: function (params) {
-              return {
-                  q: params.term, // search term
-                  page: params.page
-              };
+                if (params.term === undefined) {
+                    params.term = $('#id_title').val();
+                    params.term += $('#id_description').val();
+                }
+
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
             },
 
             processResults: function (data, params) {
@@ -76,29 +81,29 @@ jQuery(function() {
 
 
     // get CWE suggestions
-    $("body").on('click', '#cwe-suggestion-button', function(e){
-        var description = $('#id_description').val();
-        if (description) {
-            // Description is present, we need to make a call to the Enhanced CWE application to get the related CWEs
-            $.ajax({
-                url: $(this).data('ajax-url'),
-                data: {description: description},
+    // $("body").on('click', '#cwe-suggestion-button', function(e){
+    //     var description = $('#id_description').val();
+    //     if (description) {
+    //         // Description is present, we need to make a call to the Enhanced CWE application to get the related CWEs
+    //         $.ajax({
+    //             url: $(this).data('ajax-url'),
+    //             data: {description: description},
 
-                success: function (result) {
-                    cwe_select.empty()
-                    $.each(result.items, function() {
-                        var option = new Option(this.text, this.id, true, true);
-                        cwe_select.append(option)
-                    });
-                    cwe_select.trigger("change");
-                },
+    //             success: function (result) {
+    //                 cwe_select.empty()
+    //                 $.each(result.items, function() {
+    //                     var option = new Option(this.text, this.id, true, true);
+    //                     cwe_select.append(option)
+    //                 });
+    //                 cwe_select.trigger("change");
+    //             },
 
-                error: function (xhr, errmsg, err) {
-                    alert("Oops! We have encountered and error \n" + errmsg);
-                }
-            });
-        }
-    });
+    //             error: function (xhr, errmsg, err) {
+    //                 alert("Oops! We have encountered and error \n" + errmsg);
+    //             }
+    //         });
+    //     }
+    // });
 
     // Make MUO fields not readonly before submitting the form or else the values won't be submitted
     $("#report_form").submit(function( event ) {
