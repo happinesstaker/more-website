@@ -3,7 +3,7 @@
 
 {% block extrastyle %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "dist/css/select2.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'dist/css/select2.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'frontpage/frontpage.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'fluent_comments/css/ajaxcomments.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'comments/comments.css' %}" />
@@ -51,17 +51,17 @@
             {% csrf_token %}
 
             <div class="col-md-12">
-                <div id="div_id_cwes" class=" {% if form.cwes.errors %} has-error {% endif %}">
-                    <label for="div_id_cwes" class="control-label  requiredField">
-                        {{ form.cwes.label }}
-                    </label>
+                <!-- <div id="div_id_cwes" class=" {% if form.cwes.errors %} has-error {% endif %}"> -->
+                <!--     <label for="div_id_cwes" class="control-label  requiredField"> -->
+                <!--         {{ form.cwes.label }} -->
+                <!--     </label> -->
 
+                <div class="input-group input-group-lg">
+                          <select id="id_cwes" name="cwes" multiple="multiple"
+                              style="width:100%;height:100%"
+                              data-ajax-url="{% url 'frontpage:get_cwes' %}"
+                              data-page-limit="{{ cwe_limit }}"></select>
 
-                    <div class="input-group input-group-lg">
-
-                        <select id="id_cwes" name="cwes" multiple="multiple" style="width:100%;height:46px"
-                                data-ajax-url="{% url 'frontpage:get_cwes' %}"
-                                data-page-limit="{{ cwe_limit }}"></select>
 
                         <div class="input-group-btn">
                             <button class="btn btn-success btn-flat" id="cwe-submit-button" type="button"
@@ -74,12 +74,12 @@
                     </div>
 
 
-                    {% if form.cwes.errors %}
-                        {% for error in form.cwes.errors %}
-                            <p class="help-block"><strong>{{ error|escape }}</strong></p>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+                <!--     {% if form.cwes.errors %} -->
+                <!--         {% for error in form.cwes.errors %} -->
+                <!--             <p class="help-block"><strong>{{ error|escape }}</strong></p> -->
+                <!--         {% endfor %} -->
+                <!--     {% endif %} -->
+                <!-- </div> -->
             </div>
 
             <div class="col-md-12 muo-search-container" style="display: none;">
