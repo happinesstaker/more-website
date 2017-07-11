@@ -21,6 +21,14 @@ from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
+from solo.models import SingletonModel
+
+class SearchLocator(SingletonModel):
+    name = models.CharField(max_length=128, default="Default")
+
+    class Meta:
+        verbose_name = "SearchLocator"
+
 from cwe_search import CWESearchLocator
 
 class Category(BaseModel):

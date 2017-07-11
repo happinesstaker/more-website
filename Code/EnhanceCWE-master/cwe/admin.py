@@ -25,6 +25,19 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 import re
+from cwe_search import CWESearchLocator
+
+class SearchLocatorForm(forms.ModelForm):
+    searchkeys = CWESearchLocator.service_list.keys()
+    CHOICES = tuple((x, x) for x in searchkeys)
+
+    name = forms.ChoiceField(choices=CHOICES)
+
+@admin.register(SearchLocator)
+class SearchLocatorAdmin(BaseAdmin):
+    fields = ['name']
+    list_display = ['name']
+    form = SearchLocatorForm
 
 @admin.register(Category)
 class CategoryAdmin(BaseAdmin):
