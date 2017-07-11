@@ -1,0 +1,21 @@
+#footer{
+	
+}
+
+#contact-us-div{
+	float:right;
+}
+
+
+
+#contact-us-btn{
+	width: 10em; 
+	height: 1.8em; 
+	font-size: 110%;
+	font-weight: 600;
+	background-color: white;
+	color:black;
+	border: none;
+	margin-top: -0.7em;
+	font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+}
