@@ -25,7 +25,11 @@ from django.utils.safestring import mark_safe
 from cwe.models import CWE
 from muo.models import MisuseCase, UseCase, IssueReport, Vote
 from .settings import SELECT_CWE_PAGE_LIMIT
-
+from django.core.mail import mail_admins
+from mailer.util import send_email
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.template import Context
 
 # Home screen
 def index(request):
@@ -187,3 +191,36 @@ def process_issue_report(request):
 
     else:
         raise Http404("Invalid access using GET request!")
+
+
+def process_contact_us(request):
+    if request.method == 'POST':
+
+        subject = request.POST['subject']
+        content = request.POST['content']
+
+        if not subject:
+            raise Http404("Subject cannot be empty!\n")
+
+        if not request.POST['user_name']:
+            sender_name = "anonymous"
+        else:
+            sender_name = request.POST['user_name']
+
+        message = "sender's name: "+request.POST['user_name']+"\n"
+
+        if request.POST['user_email']:
+            message += "sender's email: "+request.POST['user_email']+"\n"
+
+        message += "subject: "+subject+"\n"
+        message += "content: "+content+"\n"
+
+        superuser = User.objects.get(is_superuser = True)
+        
+        send_email(subject=subject, users = [superuser], message=message,
+            context=Context({'username': superuser.username, 'body': message}))
+
+        return JsonResponse({'succ':True})
+    else:
+        raise Http404("Service not Available\n")
+

@@ -23,7 +23,7 @@ SENDER_EMAIL = getattr(settings, 'SENDER_EMAIL', '')
 
 
 def send_email(subject, users, message=None, template=None, context=None, fail_silently=True, **kwargs):
-
+    print "line 26\n"
     if fail_silently:
         thread = threading.Thread(target=_send_email, kwargs=locals())
         thread.start()

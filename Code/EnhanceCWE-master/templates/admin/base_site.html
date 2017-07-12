@@ -100,11 +100,13 @@
                         <input id="contact-us-subject" type="text" placeholder="Subject">
                         </div>
                         <div id = "contact-us-body-3">
-                            <textarea id="contact-us-text" type="text" placeholder="What you want to tell us....">
-                            </textarea>
+                            <textarea id="contact-us-text" type="text"></textarea>
                         </div>
                         <div id = "send-email-btn-div">
-                            <button type="button" id = "send-email-btn" onclick = "" class = "btn btn-lg btn-primary btn-block"> Send Email </button>
+                            <button type="button" id = "send-email-btn" 
+                            onclick = "get_ContactUs_info()" 
+                            class = "btn btn-lg btn-primary btn-block" 
+                            data-ajax-url = "{% url 'frontpage:process_contact_us' %}"> Send Email </button>
                         </div>
                   </div>
 

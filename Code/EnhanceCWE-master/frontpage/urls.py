@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^get_usecases/$', views.get_usecases, name='get_usecases'),
     url(r'^create_issue_report/$', views.create_issue_report, name='create_issue_report'),
     url(r'^process_issue_report/$', views.process_issue_report, name='process_issue_report'),
+    url(r'^process_contact_us/$', views.process_contact_us, name='process_contact_us'),
 ]
