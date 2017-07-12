@@ -18,4 +18,5 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^process_contact_us/$', views.process_contact_us, name='process_contact_us'),
 ]
