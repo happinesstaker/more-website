@@ -242,6 +242,7 @@ class CWESearchSingleString(APIView):
         if search_str.isdigit():
             cwe_objects = list(CWE.objects.all().filter(Q(code=search_str) | Q(name__icontains=search_str)))
         else:
+            print CWESearchLocator.get_instance()
             cwe_count_tuples = CWESearchLocator.get_instance().search_cwes(search_str)
             cwe_objects = [cwe_count_tuple[0] for cwe_count_tuple in cwe_count_tuples]
 

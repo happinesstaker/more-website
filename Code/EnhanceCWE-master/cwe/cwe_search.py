@@ -284,7 +284,7 @@ class TestSearch(CWESearchBase):
         st = PorterStemmer()  # Initialize a stemmer
 
         # Build stemmed list
-        steBmmed = [st.stem(word) for word in filtered_words]
+        stemmed = [st.stem(word) for word in filtered_words]
 
         # Sort by frequency
         counts = collections.Counter(stemmed)
