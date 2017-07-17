@@ -377,10 +377,12 @@ class MUOContainer(BaseModel):
             misuse_case.cwes.add(*cwe_objects)  # Establish the relationship between the misuse case and CWEs
 
             # Create the MUO container for the misuse case and establish the relationship between the
+            # At this point misuse case has been committed so that is_custom field should be False
             # MUO Container and CWEs
             muo_container = MUOContainer(is_custom=True,
                                          is_published=False,
                                          status='draft',
+                                         misuse_case_type='existing',
                                          misuse_case=misuse_case,
                                          created_by=created_by,
                                          created_at=timezone.now(),

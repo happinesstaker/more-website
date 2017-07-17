@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -90,18 +90,17 @@ class rest_api:
 
     @staticmethod
     def send_modification_advice(muo, title, content):
-        
+
         rw_identifier = muo.rid[:muo.rid.rfind("_")]
         url_string = rest_api.get_url(rw_identifier)
         if not url_string:
             return False
 
-        url_string += "report_feedback"
+        url_string += "report_feedback/"
         auth = rest_api.get_header(rw_identifier)
         if not auth:
             return False
         post_data = {'id':muo.rid, 'title':title, 'content':content}
 
         response = requests.post(url_string, headers=auth, data=post_data)
-        return True 
-       
+        return True
