@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -89,6 +89,7 @@ class UseCaseAdmin(BaseAdmin):
     readonly_fields = ['name']
     list_display = ['name']
     search_fields = ['name', 'use_case_description', 'tags__name']
+    view_on_site = False
 
     def get_model_perms(self, request):
         """
@@ -104,6 +105,7 @@ class UseCaseAdminInLine(admin.StackedInline):
               'use_case_postcondition', 'use_case_assumption', 'use_case_source',
               'osr_pattern_type', 'osr']
     readonly_fields = ['name']
+    view_on_site = False
 
     def has_delete_permission(self, request, obj=None):
         """
