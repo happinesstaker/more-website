@@ -29,6 +29,7 @@ from django.utils.safestring import mark_safe
 
 from django.http import HttpResponseRedirect
 from base.admin import BaseAdmin
+from simple_history.admin import SimpleHistoryAdmin
 
 # Tags are not used anywhere for now
 # @admin.register(Tag)
@@ -178,13 +179,14 @@ class PublishUnpublishValues:
 
 
 @admin.register(MUOContainer)
-class MUOContainerAdmin(BaseAdmin):
+class MUOContainerAdmin(BaseAdmin, SimpleHistoryAdmin):
     form = autocomplete_light.modelform_factory(MUOContainer, fields="__all__")
     fields = ['name', 'cwes', 'misuse_case_type', 'misuse_case', 'misuse_case_description',
               'misuse_case_primary_actor', 'misuse_case_secondary_actor', 'misuse_case_precondition',
               'misuse_case_flow_of_events', 'misuse_case_postcondition', 'misuse_case_assumption',
               'misuse_case_source', 'status']
     list_display = ['name', 'status']
+    history_list_display = ['status']
     readonly_fields = ['name', 'status']
     search_fields = ['name', 'status']
     date_hierarchy = 'created_at'

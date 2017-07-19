@@ -13,6 +13,8 @@
 # Released under a modified BSD license, please see license.txt for full
 # terms. DM-0003473
 # @OPENSOURCE_HEADER_END@
+import re
+
 from django import forms
 from django.contrib import admin
 from base.admin import BaseAdmin
@@ -24,7 +26,6 @@ import autocomplete_light
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
-import re
 from cwe_search import CWESearchLocator
 
 class SearchLocatorForm(forms.ModelForm):

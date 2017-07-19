@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'widget_tweaks',
     'mailer',
     'django_extensions',
+    'simple_history',
 )
 
 # Email settings
@@ -132,6 +133,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'EnhancedCWE.middleware.WhodidMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 )
 
 ROOT_URLCONF = 'EnhancedCWE.urls'

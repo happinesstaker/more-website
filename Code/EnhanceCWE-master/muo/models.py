@@ -27,6 +27,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth.models import  User
 from rest_api.utils import rest_api
+from simple_history.models import HistoricalRecords
 
 STATUS = [('draft', 'Draft'),
           ('in_review', 'In Review'),
@@ -191,6 +192,7 @@ def post_save_misusecase(sender, instance, created, using, **kwargs):
 class MUOContainer(BaseModel):
     name = models.CharField(max_length=16, null=True, blank=True, db_index=True, default="/")
     cwes = models.ManyToManyField(CWE, related_name='muo_container')
+    history = HistoricalRecords()
 
     misuse_case_type = models.CharField(max_length=16,
                                         null=True,
