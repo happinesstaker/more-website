@@ -134,3 +134,8 @@
     color: #666;
     margin-bottom: 0px;
 }
+
+div.search-reports-result{
+    height: 300px;
+    overflow:scroll;
+}

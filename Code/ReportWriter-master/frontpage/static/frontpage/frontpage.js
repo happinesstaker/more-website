@@ -1,3 +1,8 @@
+var offset = window.pageYOffset;
+setTimeout(function(){
+   offset = window.pageYOffset;
+}, 3000);
+
 jQuery(function() {
 
     if ($('#search-reports-input').val()) {
@@ -35,15 +40,16 @@ jQuery(function() {
 
 });
 
-
+var page;
 function search_reports(){
     $('#marquee').slideUp();
     $('.search-reports-container').show();
+    page = 1;
 
     $.ajax({
         url: $('#search-reports-form').data('ajax-url'),
         type: 'POST',
-        data: {term: $('#search-reports-input').val()}, // Send the search term
+        data: {term: $('#search-reports-input').val(), page: 1}, // Send the search term
 
         success: function(result) {
             $('.search-reports-result').html(result);
@@ -54,5 +60,87 @@ function search_reports(){
             alert("Oops! We have encountered and error \n" + errmsg);
         }
     });
+    // $(".search-reports-result").bind('scroll', function() {
+    //    console.log('Event worked');
+    // });
+    
+    var win_lastScrollTop = 0;
+    $('.search-reports-result').bind('scroll', function() {
+        var st = $(this).scrollTop();
+        if( st>$('.search-reports-result').height()-150)
+        {
+            page += 1;
+            $.ajax({
+                url: $('#search-reports-form').data('ajax-url'),
+                type: 'POST',
+                data: {term: $('#search-reports-input').val(), page: page}, // Send the search term
+
+                success: function(result) {
+                    $('.search-reports-result').html(result);
+                },
+
+                error: function(xhr,errmsg,err) {
+                    // Show error message in the alert
+                    alert("Oops! We have encountered and error \n" + errmsg);
+                }
+            });
+        }
+        else if(st<20){
+            page -= 1;
+            if(page<1)
+            {
+                page = 1;
+            }
+            $.ajax({
+                url: $('#search-reports-form').data('ajax-url'),
+                type: 'POST',
+                data: {term: $('#search-reports-input').val(), page: page}, // Send the search term
+
+                success: function(result) {
+                    
+                    $('.search-reports-result').html(result);
+                },
+
+                error: function(xhr,errmsg,err) {
+                    // Show error message in the alert
+                    alert("Oops! We have encountered and error \n" + errmsg);
+                }
+            });
+        }
+
+    });
+
+    $(window).bind('scroll', function() {
+        var win_st = $(this).scrollTop();
+        if(win_st < win_lastScrollTop)
+        {
+            page -= 1;
+            if(page<1)
+            {
+                page = 1;
+            }
+            $.ajax({
+                url: $('#search-reports-form').data('ajax-url'),
+                type: 'POST',
+                data: {term: $('#search-reports-input').val(), page: page}, // Send the search term
+
+                success: function(result) {
+                    $('.search-reports-result').html(result);
+                },
+
+                error: function(xhr,errmsg,err) {
+                    // Show error message in the alert
+                    alert("Oops! We have encountered and error \n" + errmsg);
+                }
+            }); 
+        }
+        win_lastScrollTop = win_st;
+        
+    });
+    
 }
+
+
+
+
 

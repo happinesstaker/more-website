@@ -23,6 +23,7 @@ from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.utils.safestring import mark_safe
 from report.models import Report, IssueReport
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def report_list(request):
@@ -49,7 +50,21 @@ def report_list(request):
     else:
         reports = Report.objects.approved()
 
-    context = {'reports': reports}
+    result_per_page = 5
+    paginator = Paginator(reports, result_per_page)
+    page = request.POST.get('page')
+
+    try:
+        cur_reports = paginator.page(page)
+    except PageNotAnInteger:
+        cur_reports = paginator.page(2)
+    except EmptyPage:
+        cur_reports = paginator.page(paginator.num_pages)
+
+
+    print cur_reports
+
+    context = {'reports': cur_reports, 'has_next': cur_reports.has_next()}
 
     return TemplateResponse(request, "report/report_list.html", context)
 
