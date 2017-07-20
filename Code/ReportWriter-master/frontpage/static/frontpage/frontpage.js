@@ -68,7 +68,7 @@ function search_reports(){
     var win_lastScrollTop = 0;
     $('.search-reports-result').bind('scroll', function() {
         var st = $(this).scrollTop();
-        if( st>$('.search-reports-result').height()-150)
+        if( st > 150 + (page - 1) * 370)
         {
             page += 1;
             $.ajax({
