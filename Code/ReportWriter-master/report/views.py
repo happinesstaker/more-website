@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -20,10 +20,12 @@ from django.http import HttpResponseForbidden, Http404, HttpResponseRedirect
 from django.db.models import Q
 import operator
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 from django.utils.safestring import mark_safe
 from report.models import Report, IssueReport
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
 
 
 def report_list(request):
@@ -61,12 +63,10 @@ def report_list(request):
     except EmptyPage:
         cur_reports = paginator.page(paginator.num_pages)
 
-
-    print cur_reports
-
     context = {'reports': cur_reports, 'has_next': cur_reports.has_next()}
 
-    return TemplateResponse(request, "report/report_list.html", context)
+    page = render_to_string("report/report_list.html", context)
+    return JsonResponse({'hasnext': cur_reports.has_next(), 'html': page})
 
 
 def report_details(request, pk):
@@ -123,4 +123,3 @@ def process_issue_report(request):
 
     else:
         raise Http404("Invalid access using GET request!")
-

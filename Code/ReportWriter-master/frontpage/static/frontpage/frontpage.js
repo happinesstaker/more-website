@@ -49,10 +49,11 @@ function search_reports(){
     $.ajax({
         url: $('#search-reports-form').data('ajax-url'),
         type: 'POST',
+        dataType: 'json',
         data: {term: $('#search-reports-input').val(), page: 1}, // Send the search term
 
         success: function(result) {
-            $('.search-reports-result').html(result);
+            $('.search-reports-result').html(result.html);
         },
 
         error: function(xhr,errmsg,err) {
@@ -63,7 +64,7 @@ function search_reports(){
     // $(".search-reports-result").bind('scroll', function() {
     //    console.log('Event worked');
     // });
-    
+
     var win_lastScrollTop = 0;
     $('.search-reports-result').bind('scroll', function() {
         var st = $(this).scrollTop();
@@ -73,10 +74,14 @@ function search_reports(){
             $.ajax({
                 url: $('#search-reports-form').data('ajax-url'),
                 type: 'POST',
+                dataType: 'json',
                 data: {term: $('#search-reports-input').val(), page: page}, // Send the search term
 
                 success: function(result) {
-                    $('.search-reports-result').html(result);
+                    if (!result.hasnext) {
+                        $('.search-reports-result').unbind();
+                    }
+                    $('.search-reports-result').append(result.html);
                 },
 
                 error: function(xhr,errmsg,err) {
@@ -85,62 +90,57 @@ function search_reports(){
                 }
             });
         }
-        else if(st<20){
-            page -= 1;
-            if(page<1)
-            {
-                page = 1;
-            }
-            $.ajax({
-                url: $('#search-reports-form').data('ajax-url'),
-                type: 'POST',
-                data: {term: $('#search-reports-input').val(), page: page}, // Send the search term
+    //     else if(st<20){
+    //         page -= 1;
+    //         if(page<1)
+    //         {
+    //             page = 1;
+    //         }
+    //         $.ajax({
+    //             url: $('#search-reports-form').data('ajax-url'),
+    //             type: 'POST',
+    //             data: {term: $('#search-reports-input').val(), page: page}, // Send the search term
 
-                success: function(result) {
-                    
-                    $('.search-reports-result').html(result);
-                },
+    //             success: function(result) {
 
-                error: function(xhr,errmsg,err) {
-                    // Show error message in the alert
-                    alert("Oops! We have encountered and error \n" + errmsg);
-                }
-            });
-        }
+    //                 $('.search-reports-result').html(result);
+    //             },
+
+    //             error: function(xhr,errmsg,err) {
+    //                 // Show error message in the alert
+    //                 alert("Oops! We have encountered and error \n" + errmsg);
+    //             }
+    //         });
+    //     }
+
+    // });
+
+    // $(window).bind('scroll', function() {
+    //     var win_st = $(this).scrollTop();
+    //     if(win_st < win_lastScrollTop)
+    //     {
+    //         page -= 1;
+    //         if(page<1)
+    //         {
+    //             page = 1;
+    //         }
+    //         $.ajax({
+    //             url: $('#search-reports-form').data('ajax-url'),
+    //             type: 'POST',
+    //             data: {term: $('#search-reports-input').val(), page: page}, // Send the search term
+
+    //             success: function(result) {
+    //                 $('.search-reports-result').html(result);
+    //             },
+
+    //             error: function(xhr,errmsg,err) {
+    //                 // Show error message in the alert
+    //                 alert("Oops! We have encountered and error \n" + errmsg);
+    //             }
+    //         });
+    //     }
+    //     win_lastScrollTop = win_st;
 
     });
 
-    $(window).bind('scroll', function() {
-        var win_st = $(this).scrollTop();
-        if(win_st < win_lastScrollTop)
-        {
-            page -= 1;
-            if(page<1)
-            {
-                page = 1;
-            }
-            $.ajax({
-                url: $('#search-reports-form').data('ajax-url'),
-                type: 'POST',
-                data: {term: $('#search-reports-input').val(), page: page}, // Send the search term
-
-                success: function(result) {
-                    $('.search-reports-result').html(result);
-                },
-
-                error: function(xhr,errmsg,err) {
-                    // Show error message in the alert
-                    alert("Oops! We have encountered and error \n" + errmsg);
-                }
-            }); 
-        }
-        win_lastScrollTop = win_st;
-        
-    });
-    
 }
-
-
-
-
-
