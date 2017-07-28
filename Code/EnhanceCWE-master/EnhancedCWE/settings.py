@@ -85,7 +85,7 @@ INSTALLED_APPS = (
     'widget_tweaks',
     'mailer',
     'django_extensions',
-    'simple_history',
+    # 'simple_history',
 )
 
 # Email settings
