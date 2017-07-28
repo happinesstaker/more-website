@@ -18,6 +18,7 @@ import collections
 from collections import OrderedDict
 from nltk.stem.porter import *
 from models import SearchLocator
+from EnhancedCWE.settings import BASE_DIR
 import re
 
 class CWESearchLocator:
@@ -136,7 +137,7 @@ class CWEKeywordSearch(CWESearchBase):
         # Read stop words in a collection from a file stored in the disk
         import os
         self.stop_words = []
-        with open(os.getcwd() + '/cwe/stopwords.txt', 'r') as f:
+        with open(os.path.join(BASE_DIR, 'cwe/stopwords.txt'), 'r') as f:
             for line in f:
                 for word in line.split():
                     self.stop_words.append(word)
@@ -221,7 +222,7 @@ class TestSearch(CWESearchBase):
         # Read stop words in a collection from a file stored in the disk
         import os
         self.stop_words = []
-        with open(os.getcwd() + '/cwe/stopwords.txt', 'r') as f:
+        with open(os.path.join(BASE_DIR, 'cwe/stopwords.txt'), 'r') as f:
             for line in f:
                 for word in line.split():
                     self.stop_words.append(word)
