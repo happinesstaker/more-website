@@ -28,11 +28,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import dj_database_url
-from ConfigParser import RawConfigParser
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-config = RawConfigParser()
-config.read(BASE_DIR + '/../../Deploy/config.ini')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -93,10 +90,10 @@ INSTALLED_APPS = (
 
 # Email settings
 EMAIL_USE_TLS = True
-EMAIL_HOST = config.get('email','EMAIL_HOST')
-EMAIL_HOST_USER = config.get('email', 'EMAIL_HOST_USER')
-EMAIL_PORT = config.get('email', 'EMAIL_PORT')
-EMAIL_HOST_PASSWORD = config.get('email', 'EMAIL_PASSWORD')
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
 
 
 # START: allauth settings
@@ -116,8 +113,8 @@ ACCOUNT_EXTRA_PRE_LOGIN_STEPS = ['invitation.utils.verify_email_if_invited',
 # END
 
 # START: Capcha settings
-RECAPTCHA_PUBLIC_KEY = '6LcQ5RsUAAAAADt3lPJThyLWPK1hd6ja9kiDVFfb'
-RECAPTCHA_PRIVATE_KEY = '6LcQ5RsUAAAAACfW2F1qpmrYm_4mrIB1d37gtY_p'
+RECAPTCHA_PUBLIC_KEY = os.environ['RECAPTCHA_PUBLIC_KEY']
+RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
 NOCAPTCHA= True
 RECAPTCHA_USE_SSL = True
 # END
@@ -174,17 +171,14 @@ WSGI_APPLICATION = 'EnhancedCWE.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': config.get('SERF database', 'ENGINE'),
-        'NAME': config.get('SERF database', 'NAME'),
-        'USER': config.get('SERF database', 'USER'),
-        'PASSWORD': config.get('SERF database', 'PASSWORD'),
-        'HOST': config.get('SERF database', 'HOST'),
-        'PORT': config.get('SERF database', 'PORT'),
-
     }
 }
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
+
+
 # Enable Connection Pooling
-# DATABASES['default']['ENGINE'] = 'django_postgrespool'
+DATABASES['default']['ENGINE'] = 'django_postgrespool'
 
 
 # Internationalization
@@ -203,13 +197,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
-
 
 # Settings for the REST framework
 REST_FRAMEWORK = {
@@ -220,7 +213,6 @@ REST_FRAMEWORK = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
