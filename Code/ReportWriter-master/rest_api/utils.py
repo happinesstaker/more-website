@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -17,12 +17,7 @@ import requests
 from requests.exceptions import ConnectionError
 from .models import *
 import json
-from ConfigParser import RawConfigParser
 import os
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-config = RawConfigParser()
-config.read(BASE_DIR + '/../../Deploy/config.ini')
 
 class rest_api:
 

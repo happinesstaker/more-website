@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -23,11 +23,6 @@ from django.dispatch import receiver
 from django.utils import timezone
 from rest_api.utils import rest_api
 import os
-from ConfigParser import RawConfigParser
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-config = RawConfigParser()
-config.read(BASE_DIR + '/../../Deploy/config.ini')
 
 STATUS = [('draft', 'Draft'),
           ('in_review', 'In Review'),
@@ -195,7 +190,7 @@ class Report(BaseModel):
         if self.status == 'draft':
             self.status = 'in_review'
             self.save()
-            identifier = config.get('RW identifier','IDENTIFIER')
+            identifier = os.environ('IDENTIFIER')
             self.rid = identifier+'_'+str(self.id)
             self.save()
             # Send email
