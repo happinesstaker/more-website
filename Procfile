@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath Code/ReportWriter-master Reportwriter.wsgi --log-file -
+web: gunicorn --pythonpath Code/ReportWriter-master ReportWriter.wsgi --log-file -
