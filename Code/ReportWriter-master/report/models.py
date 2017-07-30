@@ -190,7 +190,7 @@ class Report(BaseModel):
         if self.status == 'draft':
             self.status = 'in_review'
             self.save()
-            identifier = os.environ('IDENTIFIER')
+            identifier = os.environ['IDENTIFIER']
             self.rid = identifier+'_'+str(self.id)
             self.save()
             # Send email
