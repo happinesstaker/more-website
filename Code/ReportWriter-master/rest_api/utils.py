@@ -29,7 +29,10 @@ class rest_api:
         '''
         if RESTConfiguration.objects.exists():
             config = RESTConfiguration.objects.all()[0]
-            return config.url
+            url = config.url
+            if url is not None and url[-1] == '/':
+                url = url[:-1]
+            return url
         else:
             return None
 
