@@ -22,4 +22,6 @@ available at the [SEI website](http://resources.sei.cmu.edu/library/asset-view.c
 Common Weakness Enumeration (CWE) is a trademark of the MITRE Corporation.
 [MITRE CWE](http://cwe.mitre.org)
 
-## Connect JIRA with Bitbucket TEST
+---
+
+To deploy SERF and ReportWriter, see Deploy/Deploy_Guide.pdf for detailed instructions

@@ -1,4 +1,4 @@
-Django
+Django==1.8.2
 django-admin-bootstrapped==2.5.0
 django-autocomplete-light==2.2.0rc4
 psycopg2
@@ -20,3 +20,4 @@ wsgiref==0.1.2
 django-solo==1.1.0
 django-postgrespool==0.3.0
 django-extensions
+django-simple-history
