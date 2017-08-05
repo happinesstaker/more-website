@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -109,8 +109,7 @@ def muo_submit_row(context):
 
         'show_advice':  model_object and
                         model_object.is_published == True and
-                        model_object.status in ('approved',) and
-                        (user_object.has_perm('muo.can_edit_all') or user_object.has_perm('muo.can_approve') or user_object.has_perm('muo.can_reject')),
+                        model_object.status in ('approved',),
     })
 
     return ctx

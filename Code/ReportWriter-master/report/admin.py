@@ -1,5 +1,5 @@
 # @OPENSOURCE_HEADER_START@
-# MORE Tool 
+# MORE Tool
 # Copyright 2016 Carnegie Mellon University.
 # All Rights Reserved.
 #
@@ -57,6 +57,11 @@ class AdviceAdminInLine(admin.StackedInline):
         """
         return False
 
+    def has_view_permission(self, request, obj=None):
+        """
+        Everyone can see advice
+        """
+        return True
 
     def get_readonly_fields(self, request, obj=None):
         """
@@ -66,7 +71,7 @@ class AdviceAdminInLine(admin.StackedInline):
         """
 
         if obj is None:
-            # This is add form, let super handle this
+            # Change form hide all advice
             return []
         else:
             # All user can see advice

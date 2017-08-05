@@ -419,8 +419,8 @@ class Advice(BaseModel):
 
     class Meta:
         verbose_name = "Advice"
-        verbose_name_plural = "Advice"
-        default_permissions = ('view')
+        verbose_name_plural = "Advices"
+        default_permissions = ('add', 'change', 'delete', 'view')
 
     def __unicode__(self):
         return self.advice_title
